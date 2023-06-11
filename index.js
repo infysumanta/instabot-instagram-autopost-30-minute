@@ -1,5 +1,5 @@
 require('dotenv').config();
-
+const sentence = require('./sentences.js');
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 4000;
@@ -8,6 +8,8 @@ const nodemailer = require('nodemailer');
 const { IgApiClient } = require('instagram-private-api');
 const { get } = require('request-promise');
 const CronJob = require('cron').CronJob;
+
+const totalSentence = sentence.length;
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
@@ -60,6 +62,7 @@ const sendMailNotSend = async () => {
 };
 
 const sendPost = async () => {
+  const caption = sentence[Math.floor(Math.random() * totalSentence)];
   const imageBuffer = await get({
     url: 'https://picsum.photos/200/300',
     encoding: null,
@@ -69,7 +72,7 @@ const sendPost = async () => {
 
   await ig.publish.photo({
     file: imageBuffer,
-    caption: 'Really nice photo from the internet!',
+    caption: caption.sentence.toString(),
   });
 };
 
