@@ -10,6 +10,7 @@ const { get } = require('request-promise');
 const CronJob = require('cron').CronJob;
 
 const totalSentence = sentence.length;
+console.log('Sentence Loaded');
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
@@ -62,6 +63,10 @@ const sendMailNotSend = async () => {
 };
 
 const sendPost = async () => {
+  console.log(
+    'Posting to Instagram at',
+    new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }),
+  );
   const caption = sentence[Math.floor(Math.random() * totalSentence)];
   const imageBuffer = await get({
     url: 'https://picsum.photos/200/300',
@@ -74,34 +79,26 @@ const sendPost = async () => {
     file: imageBuffer,
     caption: caption.sentence.toString(),
   });
+  await sendMail();
+  console.log(
+    'Posted to Instagram at',
+    new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }),
+  );
 };
 
 const postToInsta = async () => {
-  const ifPost = Math.floor(Math.random() * 2);
+  const ifPost = Math.floor(Math.random() * 3);
   console.log('ifPost', ifPost);
   if (ifPost === 1) {
-    const postTimer = 0; //Math.floor(Math.random() * 61);
+    const postTimer = Math.floor(Math.random() * 61);
     console.log('postTimer', postTimer);
-    setTimeout(async () => {
-      console.log(
-        'Posting to Instagram at',
-        new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }),
-      );
-      await sendPost();
-      await sendMail();
-      console.log(
-        'Posted to Instagram at',
-        new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }),
-      );
-    }, postTimer * 1000);
+    setTimeout(sendPost, postTimer * 1000);
   } else {
     await sendMailNotSend();
   }
 };
 
-const cronInsta = new CronJob('*/60 * * * *', async () => {
-  postToInsta();
-});
+const cronInsta = new CronJob('*/60 * * * *', postToInsta);
 
 login()
   .then(() => {
