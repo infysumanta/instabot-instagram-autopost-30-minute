@@ -77,7 +77,7 @@ const sendPost = async () => {
 
   await ig.publish.photo({
     file: imageBuffer,
-    caption: caption.sentence.toString(),
+    caption: `${caption.sentence.toString()} \n\n #trending #viral #instagram #love #explorepage #explore #instagood #fashion #follow #tiktok #like #likeforlikes #followforfollowback #photography #india #trend #instadaily #memes #music #style #trendingnow #reels #foryou #likes #photooftheday #model #beautiful #bollywood #bhfyp #insta`,
   });
   await sendMail();
   console.log(
@@ -87,18 +87,18 @@ const sendPost = async () => {
 };
 
 const postToInsta = async () => {
-  const ifPost = Math.floor(Math.random() * 3);
+  const ifPost = Math.floor(Math.random() * 2);
   console.log('ifPost', ifPost);
   if (ifPost === 1) {
     const postTimer = Math.floor(Math.random() * 61);
     console.log('postTimer', postTimer);
-    setTimeout(sendPost, postTimer * 1000);
+    setTimeout(sendPost, postTimer * 1000 * 60);
   } else {
     await sendMailNotSend();
   }
 };
 
-const cronInsta = new CronJob('*/60 * * * *', postToInsta);
+const cronInsta = new CronJob('*/120 * * * *', postToInsta);
 
 login()
   .then(() => {
